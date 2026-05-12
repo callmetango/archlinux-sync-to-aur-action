@@ -25,8 +25,10 @@ runs:
     - name: Set up environment because composite actions don't do it themselves
       shell: sh
       run: |
-        sudo apt --assume-yes install git ssh
         printf 'INPUT_SSH_PRIVATE_KEY=${{ inputs.ssh-private-key }}' >> $GITHUB_ENV
+        whoami
+        pwd
+        
     - name: Sync to AUR
       shell: sh
       run: |
