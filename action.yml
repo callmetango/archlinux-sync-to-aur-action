@@ -1,5 +1,5 @@
-name: Arch Linux bump package version action
-description: GitHub Action to bump the version of a PKGBUILD.
+name: Arch Linux sync repository to AUR action
+description: GitHub Action to sync a given repository to the AUR.
 author: callmetango
 
 inputs:
