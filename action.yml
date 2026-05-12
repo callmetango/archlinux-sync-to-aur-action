@@ -24,9 +24,16 @@ runs:
       run: |
         mkdir -m 0700 -p ~/.ssh
         
+        eval $(ssh-agent)
+        ssh-add - <<< '${{ inputs.ssh-private-key }}'
+        
         #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
         
         printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
+
+    - name: Verify AUR SSH key fingerprints
+      shell: sh
+      run: |
         sh "$GITHUB_ACTION_PATH"/scripts/verify-ssh-fingerprints.sh \
            aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
@@ -34,6 +41,4 @@ runs:
       shell: sh
       run: |
         echo "Syncing..."
-        eval $(ssh-agent)
-        ssh-add - << '${{ inputs.ssh-private-key }}'
         ssh aur@aur.archlinux.org help
