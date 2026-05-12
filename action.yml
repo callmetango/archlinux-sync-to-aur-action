@@ -26,7 +26,7 @@ runs:
         
         #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
         
-        printf '${{ inputs.ssh-key-fingerprints }} > ~/.ssh/aur-fingerprints
+        printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
         sh "$GITHUB_ACTION_PATH"/scripts/verify-ssh-fingerprints.sh \
            aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
