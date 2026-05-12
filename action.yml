@@ -6,9 +6,11 @@ inputs:
   ssh-private-key:
     description: The SSH private key to use when connecting to the AUR
     type: string
+    required: true
 
   aur-ssh-key-fingerprints:
-    description: The fingerprints of the AUR host SSH keys
+    description: The SHA256 fingerprints of the AUR host SSH keys
+    type: string
     default: |
       ed25519: SHA256:RFzBCUItH9LZS0cKB5UE6ceAYhBD5C8GeOBip8Z11+4
       ecdsa: SHA256:uTa/0PndEgPZTf76e1DFqXKJEXKsn7m9ivhLQtzGOCI
@@ -20,12 +22,19 @@ runs:
     - name: Set up environment
       shell: sh
       run: |
-        mkdir -m 0600 -p ~/.ssh
-        printf '${{ inputs.ssh-private-key }}' > ~/.ssh/bot@aur.archlinux.org
-        ssh-keygen -y -f ~/.ssh/bot@aur.archlinux.org > ~/.ssh/bot@aur.archlinux.org.pub
+        OLDPWD="$(pwd)"
+        mkdir -m 0600 -p ~/.ssh && cd ~/.ssh
+
+        #SSH_PRIVATE_KEY='${{ inputs.ssh-private-key }}'
+        ssh-add - << '${{ inputs.ssh-private-key }}'
+        
+        #printf '${{ inputs.ssh-private-key }}' > bot@aur.archlinux.org
+        #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
+
+        printf '${{ inputs.aur-ssh-key-fingerprints }}' > aur-key-fingerprints
         
         ssh-keyscan -O hashalg=sha256 -t ed25519,ecdsa,rsa aur.archlinux.org \
-            > ~/.ssh/known_hosts
+            > known_hosts
         # FIXME verify with given values
         ssh-keygen -lf ~/.ssh/known_hosts
         
