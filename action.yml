@@ -23,13 +23,9 @@ runs:
       shell: sh
       run: |
         mkdir -m 0700 -p ~/.ssh
-        
+        printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints        
         eval $(ssh-agent)
         printf '%s\n' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
-        
-        #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
-        
-        printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
 
     - name: Verify AUR SSH key fingerprints
       shell: sh
