@@ -35,6 +35,7 @@ runs:
         INPUT_AUR_REPOSITORY: ${{ inputs.aur-repository }}
       run: |
         set -u
+        chmod u+x "$SCRIPTS_PATH"/*.sh
         . "$SCRIPTS_PATH"/gh-helpers.sh
 
         REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
