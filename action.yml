@@ -70,5 +70,5 @@ runs:
 
         git fetch origin
         BRANCH=$(git symbolic-ref --short HEAD) # get default branch
-        echo "BRANCH: $BRANCH"
+        echo "Pushing branch $BRANCH"
         git push aur "origin/$BRANCH:refs/heads/$BRANCH"
