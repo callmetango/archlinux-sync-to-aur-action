@@ -71,4 +71,4 @@ runs:
 
         git fetch origin
         BRANCH=$(git symbolic-ref --short HEAD)
-        git push aur origin/$BRANCH:refs/heads/$BRANCH
+        git push aur "origin/$BRANCH:refs/heads/$BRANCH"
