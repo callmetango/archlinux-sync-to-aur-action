@@ -1,0 +1,33 @@
+name: Arch Linux bump package version action
+description: GitHub Action to bump the version of a PKGBUILD.
+author: callmetango
+
+inputs:
+  ssh-private-key:
+    description: The SSH private key used when connecting to the AUR via SSH
+    type: string
+
+  aur-ssh-ed25519-fp:
+    description: AUR SSH Ed25519 fingerprint for the known hosts file.
+    type: string
+    default: SHA256:RFzBCUItH9LZS0cKB5UE6ceAYhBD5C8GeOBip8Z11+4
+  aur-ssh-ecdsa-fp:
+    description: AUR SSH ECDSA fingerprint for the known hosts file.
+    default: SHA256:uTa/0PndEgPZTf76e1DFqXKJEXKsn7m9ivhLQtzGOCI
+  aur-ssh-rsa-fp:
+    description: AUR SSH RSA fingerprint for the known hosts file.
+    default: SHA256:5s5cIyReIfNNVGRFdDbe3hdYiI5OelHGpw2rOUud3Q8
+  
+
+runs:
+  using: composite
+  steps:
+    - name: Set up environment because composite actions don't do it themselves
+      shell: sh
+      run: |
+        apt --assume-yes install git ssh
+        printf 'INPUT_SSH_PRIVATE_KEY=${{ inputs.ssh-private-key }}' >> $GITHUB_ENV
+    - name: Sync to AUR
+      shell: sh
+      run: |
+        echo "Syncing..."
