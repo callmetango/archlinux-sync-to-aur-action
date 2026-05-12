@@ -21,8 +21,7 @@ die() {
 
 # Main
 
-SCAN_TYPES=''
-SEP=''
+SCAN_TYPES=''; SEP=''
 while IFS= read -r line ; do
 	ALGO=$(echo "$line" | cut -d: -f1 | tr '[:lower:]' '[:upper:]')
 	echo "$line" | cut -d: -f2-3 | tr -d '[= =]' > "$ALGO-fp"
