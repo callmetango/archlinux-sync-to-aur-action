@@ -15,7 +15,7 @@ HASH_ALG='sha256'
 # Functions
 
 die() {
-	printf "$1\n"
+	printf '%s\n' "$1"
 	exit 1
 }
 
