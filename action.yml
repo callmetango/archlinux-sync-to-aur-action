@@ -63,7 +63,6 @@ runs:
         cd "$HOME"
         mkdir dummy-repo && cd dummy-repo
 
-        git config set advice.defaultBranchName false
         git init .
         git remote add origin "$GITHUB_SERVER_URL"/"$GITHUB_REPOSITORY"
         git remote add aur ssh://aur@aur.archlinux.org/"$AUR_REPOSITORY".git
