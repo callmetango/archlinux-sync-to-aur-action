@@ -36,3 +36,4 @@ runs:
         echo "Syncing..."
         eval $(ssh-agent)
         ssh-add - << '${{ inputs.ssh-private-key }}'
+        ssh aur@aur.archlinux.org help
