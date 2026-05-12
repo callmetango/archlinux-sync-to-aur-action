@@ -34,11 +34,11 @@ runs:
       run: |
         set -u
         REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
-        printf 'GITHUB_REPOSITORY=%s' "$REPO" >> $GITHUB_ENV
+        printf 'GITHUB_REPOSITORY=%s\n' "$REPO" >> $GITHUB_ENV
         AUR_REPO="$INPUT_AUR_REPOSITORY"
         test "$AUR_REPO" || AUR_REPO="${REPO##*/}"
         echo "AUR_REPO: $AUR_REPO"
-        printf 'AUR_REPOSITORY=%s' "$AUR_REPO" >> $GITHUB_ENV
+        printf 'AUR_REPOSITORY=%s\n' "$AUR_REPO" >> $GITHUB_ENV
         
         mkdir -m 0700 -p ~/.ssh
         printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
