@@ -59,16 +59,14 @@ runs:
         eval $(ssh-agent)
         printf '%s\n' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
         
-        cd "$HOME"
-        mkdir sync-repo && cd sync-repo
-
+        mkdir "$HOME"/sync-repo && cd "$HOME"/sync-repo
         git config set --global advice.defaultBranchName false
         git init .
         git remote add origin "$GITHUB_SERVER_URL"/"$REPOSITORY"
         git remote add aur ssh://aur@aur.archlinux.org/"$AUR_REPOSITORY".git
         git remote -v
-
         git fetch origin
+        
         BRANCH=$(git symbolic-ref --short HEAD) # get default branch
         echo "Pushing branch $BRANCH"
         git push aur "origin/$BRANCH:refs/heads/$BRANCH"
