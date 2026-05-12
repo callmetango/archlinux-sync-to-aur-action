@@ -58,12 +58,8 @@ runs:
         eval $(ssh-agent)
         printf '%s\n' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
         
-        #ssh aur@aur.archlinux.org help
-
         cd "$HOME"
         mkdir sync-repo && cd sync-repo
-
-        echo "REPOSITORY: $REPOSITORY"
 
         git config set --global advice.defaultBranchName false
         git init .
