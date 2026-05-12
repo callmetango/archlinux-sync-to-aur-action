@@ -8,7 +8,7 @@ inputs:
     type: string
     required: true
 
-  aur-ssh-key-fingerprints:
+  ssh-key-fingerprints:
     description: The SHA256 fingerprints of the AUR host SSH keys
     type: string
     default: |
@@ -22,23 +22,16 @@ runs:
     - name: Set up environment
       shell: sh
       run: |
-        OLDPWD="$(pwd)"
-        mkdir -m 0600 -p ~/.ssh && cd ~/.ssh
-
-        #SSH_PRIVATE_KEY='${{ inputs.ssh-private-key }}'
-        ssh-add - << '${{ inputs.ssh-private-key }}'
+        mkdir -m 0600 -p ~/.ssh
         
-        #printf '${{ inputs.ssh-private-key }}' > bot@aur.archlinux.org
         #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
-
-        printf '${{ inputs.aur-ssh-key-fingerprints }}' > aur-key-fingerprints
         
-        ssh-keyscan -O hashalg=sha256 -t ed25519,ecdsa,rsa aur.archlinux.org \
-            > known_hosts
-        # FIXME verify with given values
-        ssh-keygen -lf ~/.ssh/known_hosts
+        printf '${{ inputs.ssh-key-fingerprints }} > ~/.ssh/aur-fingerprints
+        sh "$GITHUB_ACTION_PATH"/scripts/verify-ssh-fingerprints.sh \
+           aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
     - name: Sync to AUR
       shell: sh
       run: |
         echo "Syncing..."
+        ssh-add - << '${{ inputs.ssh-private-key }}'
