@@ -26,36 +26,34 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set up environment
-      shell: sh
+    - shell: sh
       env:
         SCRIPTS_PATH: ${{ github.action_path }}/scripts
         # composite actions do not auto-export INPUT_* :-/
         INPUT_AUR_REPOSITORY: ${{ inputs.aur-repository }}
-        INPUT_REPOSITORY: ${{ inputs.repository }}
+        _REPO: ${{ inputs.repository || github.repository }}
       run: |
+        # Set up environment
         set -u
         chmod u+x "$SCRIPTS_PATH"/*.sh
         . "$SCRIPTS_PATH"/gh-helpers.sh
 
-        _REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
-        gh_env_set SCRIPTS_PATH "$SCRIPTS_PATH"
         gh_env_set REPOSITORY "$_REPO"
         gh_env_set AUR_REPOSITORY "${INPUT_AUR_REPOSITORY:-${_REPO##*/}}"
+        gh_env_set SCRIPTS_PATH "$SCRIPTS_PATH"
         
         mkdir -m 0700 -p ~/.ssh
         printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
 
-    - name: Verify AUR SSH host key fingerprints
-      shell: sh
+    - shell: sh
       run: |
+        echo "Verify AUR SSH host key fingerprints"
         "$SCRIPTS_PATH"/verify-ssh-fingerprints.sh \
             aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
-    - name: Sync repository to AUR
-      shell: sh
+    - shell: sh
       run: |
-        echo "Syncing..."
+        echo "Sync repository to AUR"
         set -u
         
         eval $(ssh-agent)
