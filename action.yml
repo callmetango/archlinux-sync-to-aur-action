@@ -31,17 +31,17 @@ runs:
       env:
         SCRIPTS_PATH: ${{ github.action_path }}/scripts
         # composite actions do not auto-export INPUT_* :-/
-        INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_AUR_REPOSITORY: ${{ inputs.aur-repository }}
+        INPUT_REPOSITORY: ${{ inputs.repository }}
       run: |
         set -u
         chmod u+x "$SCRIPTS_PATH"/*.sh
         . "$SCRIPTS_PATH"/gh-helpers.sh
 
-        REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
+        _REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
         gh_env_set SCRIPTS_PATH "$SCRIPTS_PATH"
-        gh_env_set REPOSITORY "$REPO"
-        gh_env_set AUR_REPOSITORY "${INPUT_AUR_REPOSITORY:-${REPO##*/}}"
+        gh_env_set REPOSITORY "$_REPO"
+        gh_env_set AUR_REPOSITORY "${INPUT_AUR_REPOSITORY:-${_REPO##*/}}"
         
         mkdir -m 0700 -p ~/.ssh
         printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
@@ -73,4 +73,4 @@ runs:
         git fetch origin
         BRANCH=$(git symbolic-ref --short HEAD) # get default branch
         echo "BRANCH: $BRANCH"
-        #git push aur "origin/$BRANCH:refs/heads/$BRANCH"
+        git push aur "origin/$BRANCH:refs/heads/$BRANCH"
