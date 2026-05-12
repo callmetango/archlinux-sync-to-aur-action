@@ -25,10 +25,6 @@ runs:
         mkdir -m 0700 -p ~/.ssh
         
         #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
-
-        pwd
-        printf 'whoami: '
-        whoami
         
         printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
         sh "$GITHUB_ACTION_PATH"/scripts/verify-ssh-fingerprints.sh \
@@ -38,4 +34,5 @@ runs:
       shell: sh
       run: |
         echo "Syncing..."
+        eval $(ssh-agent)
         ssh-add - << '${{ inputs.ssh-private-key }}'
