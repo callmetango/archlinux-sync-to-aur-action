@@ -25,7 +25,7 @@ runs:
         mkdir -m 0700 -p ~/.ssh
         
         eval $(ssh-agent)
-        echo '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
+        printf '%s' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
         
         #ssh-keygen -y -f bot@aur.archlinux.org > bot@aur.archlinux.org.pub
         
