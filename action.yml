@@ -26,8 +26,12 @@ runs:
       shell: sh
       run: |
         printf 'INPUT_SSH_PRIVATE_KEY=${{ inputs.ssh-private-key }}' >> $GITHUB_ENV
-        echo "HOME: $HOME"
-        pwd
+        mkdir -m 0600 -p ~/.ssh
+        
+        ssh-keyscan -O hashalg=sha256 -t ed25519,ecdsa,rsa aur.archlinux.org \
+            > ~/.ssh/known_hosts
+        # FIXME verify with given values
+        ssh-keygen -lf ~/.ssh/known_hosts
         
     - name: Sync to AUR
       shell: sh
