@@ -40,7 +40,7 @@ while IFS= read -r line ; do
 	FP=$(echo "$line" | cut -d' ' -f2)
 	set +e
 	RES=$(echo "$FP" | cmp "$ALGO-fp")
-	test "$RES" && die "$ALGO fingerprint $FP does not match given value"
+	test "$RES" && die "$ALGO fingerprint $FP does not match the given value"
 	set -e
 done < scanned-fingerprints
 
