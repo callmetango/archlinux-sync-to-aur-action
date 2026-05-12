@@ -61,7 +61,7 @@ runs:
         #ssh aur@aur.archlinux.org help
 
         cd "$HOME"
-        mkdir dummy-repo && cd dummy-repo
+        mkdir sync-repo && cd sync-repo
 
         echo "REPOSITORY: $REPOSITORY"
 
@@ -73,5 +73,4 @@ runs:
 
         git fetch origin
         BRANCH=$(git symbolic-ref --short HEAD)
-        echo "BRANCH: $BRANCH"
         git push aur "origin/$BRANCH:refs/heads/$BRANCH"
