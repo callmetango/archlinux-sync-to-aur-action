@@ -9,7 +9,7 @@ inputs:
     required: true
 
   ssh-key-fingerprints:
-    description: The SHA256 fingerprints of the AUR host SSH keys
+    description: The SHA256 fingerprints of the AUR SSH host keys
     type: string
     default: |
       ed25519: SHA256:RFzBCUItH9LZS0cKB5UE6ceAYhBD5C8GeOBip8Z11+4
@@ -24,17 +24,17 @@ runs:
       run: |
         mkdir -m 0700 -p ~/.ssh
         printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints        
-        eval $(ssh-agent)
-        printf '%s\n' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
 
-    - name: Verify AUR SSH key fingerprints
+    - name: Verify AUR SSH host key fingerprints
       shell: sh
       run: |
         sh "$GITHUB_ACTION_PATH"/scripts/verify-ssh-fingerprints.sh \
            aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
-    - name: Sync to AUR
+    - name: Sync repository to AUR
       shell: sh
       run: |
         echo "Syncing..."
+        eval $(ssh-agent)
+        printf '%s\n' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
         ssh aur@aur.archlinux.org help
