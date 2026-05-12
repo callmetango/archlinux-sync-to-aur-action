@@ -5,7 +5,7 @@ set -eu
 # Arguments
 # $1: hostname
 # $2: file containing the known fingerprints
-# $3: optional: file to append the ssh-keyscan results to
+# $3: optional: file to append the ssh-keyscan results to, e.g. known_hosts
 
 # Constants
 
