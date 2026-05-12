@@ -69,5 +69,6 @@ runs:
         git remote add aur ssh://aur@aur.archlinux.org/"$AUR_REPOSITORY".git
         git remote -v
 
-        #git push aur origin/master:refs/heads/master
-        git push aur 'refs/remotes/origin/master:refs/heads/master'
+        git fetch origin
+        BRANCH=$(git symbolic-ref --short HEAD)
+        git push aur origin/$BRANCH:refs/heads/$BRANCH
