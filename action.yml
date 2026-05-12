@@ -3,6 +3,13 @@ description: GitHub Action to sync a given repository to the AUR.
 author: callmetango
 
 inputs:
+  repository:
+    description: |
+      The name of the GitHub repository to work on in the form [HOST/]OWNER/REPO.
+      It defaults to the repository where the workflow is run.
+  aur-repository:
+    description: |
+      The name of the AUR repository. It defaults to the name of the GitHub repository.
   ssh-private-key:
     description: The SSH private key to use when connecting to the AUR
     type: string
@@ -21,20 +28,32 @@ runs:
   steps:
     - name: Set up environment
       shell: sh
+      env: # composite actions do not auto-export INPUT_*
+        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_AUR_REPOSITORY: ${{ inputs.aur-repository }}
       run: |
+        set -u
+        REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
+        printf 'GITHUB_REPOSITORY=%s' "$REPO" >> $GITHUB_ENV
+        AUR_REPO="$INPUT_AUR_REPOSITORY"
+        test "$AUR_REPO" || AUR_REPO="${REPO##*/}"
+        echo "AUR_REPO: $AUR_REPO"
+        printf 'AUR_REPOSITORY=%s' "$AUR_REPO" >> $GITHUB_ENV
+        
         mkdir -m 0700 -p ~/.ssh
-        printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints        
+        printf '${{ inputs.ssh-key-fingerprints }}' > ~/.ssh/aur-fingerprints
 
     - name: Verify AUR SSH host key fingerprints
       shell: sh
       run: |
         sh "$GITHUB_ACTION_PATH"/scripts/verify-ssh-fingerprints.sh \
-           aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
+            aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
     - name: Sync repository to AUR
       shell: sh
       run: |
         echo "Syncing..."
+        set -u
         
         eval $(ssh-agent)
         printf '%s\n' '${{ inputs.ssh-private-key }}' | tr -d '\r' | ssh-add -
@@ -44,5 +63,5 @@ runs:
         cd "$HOME"
         mkdir dummy-repo && cd dummy-repo
         git init .
-        git remote add origin https://github.com/"$INPUT_REPOSITORY"
-        git remote add aur ssh://aur@aur.archlinux.org
+        git remote add origin "$GITHUB_SERVER_URL"/"$GITHUB_REPOSITORY"
+        git remote add aur ssh://aur@aur.archlinux.org/"$AUR_REPOSITORY".git
