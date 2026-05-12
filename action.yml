@@ -47,13 +47,13 @@ runs:
 
     - shell: sh
       run: |
-        echo "Verify AUR SSH host key fingerprints"
+        # Verify AUR SSH host key fingerprints
         "$SCRIPTS_PATH"/verify-ssh-fingerprints.sh \
             aur.archlinux.org ~/.ssh/aur-fingerprints ~/.ssh/known_hosts
         
     - shell: sh
       run: |
-        echo "Sync repository to AUR"
+        # Sync repository to AUR
         set -u
         
         eval $(ssh-agent)
