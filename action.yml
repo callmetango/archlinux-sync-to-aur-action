@@ -37,8 +37,9 @@ runs:
         set -u
         . "$SCRIPTS_PATH"/gh-helpers.sh
 
+        REPO="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
         gh_env_set SCRIPTS_PATH "$SCRIPTS_PATH"
-        gh_env_set REPO "${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
+        gh_env_set REPO "$REPO"
         gh_env_set AUR_REPO "${INPUT_AUR_REPOSITORY:-${REPO##*/}}"
         
         mkdir -m 0700 -p ~/.ssh
