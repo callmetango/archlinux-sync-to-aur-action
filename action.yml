@@ -63,6 +63,8 @@ runs:
         cd "$HOME"
         mkdir dummy-repo && cd dummy-repo
 
+        echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+
         git config set --global advice.defaultBranchName false
         git init .
         git remote add origin "$GITHUB_SERVER_URL"/"$GITHUB_REPOSITORY"
@@ -71,4 +73,5 @@ runs:
 
         git fetch origin
         BRANCH=$(git symbolic-ref --short HEAD)
-        git push aur "origin/$BRANCH:refs/heads/$BRANCH"
+        echo "BRANCH: $BRANCH"
+        #git push aur "origin/$BRANCH:refs/heads/$BRANCH"
