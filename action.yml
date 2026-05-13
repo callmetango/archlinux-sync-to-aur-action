@@ -29,7 +29,7 @@ runs:
     - shell: sh
       env:
         SCRIPTS_PATH: ${{ github.action_path }}/scripts
-        # composite actions do not auto-export INPUT_* :-/
+        # composite actions do not auto-export INPUT_*, see actions/runner#665
         INPUT_AUR_REPOSITORY: ${{ inputs.aur-repository }}
         _REPO: ${{ inputs.repository || github.repository }}
       run: |
